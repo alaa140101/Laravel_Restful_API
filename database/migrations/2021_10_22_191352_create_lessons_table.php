@@ -16,8 +16,12 @@ class CreateLessonsTable extends Migration
         Schema::create('Lessons', function (Blueprint $table) {
             $table->id();
             $table->string('title', 100);
+            $table->unsignedBigInteger('user_id');
             $table->text('body');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 

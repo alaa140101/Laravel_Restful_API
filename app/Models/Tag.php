@@ -12,4 +12,9 @@ class Tag extends Model
     protected $fillable = [
         'body',
     ];
+
+    public function lessons()
+    {
+        return $this->belongsToMany(Lesson::class);
+    }
 }
