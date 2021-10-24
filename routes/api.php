@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Lesson;
 use App\Models\User;
 use App\Models\Tag;
+use App\Http\Controllers\API\LessonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,33 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => '/v1'], function() {
 
-    Route::get('lessons', function () {
-        return Lesson::all();
-    });
-
-    Route::get('lessons/{id}', function($id) {
-    return Lesson::find($id);
-    });
-
-    Route::post('lessons', function(Request $request) {
-        return Lesson::create($request->all());
-    });
-
-    Route::match(['put', 'patch'], 'lessons/{id}', function(Request $request, $id) {
-        $lesson = Lesson::findOrFail($id);
-        $lesson->update($request->all());
-        return $lesson;
-    });
-
-    Route::delete('lessons/{id}', function($id) {
-        Lesson::find($id)->delete();
-
-        return 204;
-    });
-
-    Route::any('lesson', function() {
-        return "please make sure to update your code to use the newr version of our API.";
-    });
+    Route::apiResource('lessons', LessonController::class);
 
     Route::redirect('lesson', 'lessons');
 
@@ -107,5 +82,18 @@ Route::group(['prefix' => '/v1'], function() {
         return $user;
     });
 
+    Route::get('lessons/{id}/tags', function ($id) {
+        $lesson = Lesson::find($id)->tags;
+
+        return $lesson;
+    });
+
+    Route::get('tags/{id}/lessons', function ($id) {
+        $tag = Tag::find($id)->lessons;
+
+        return $tag;
+    });
+
 });
+
 
