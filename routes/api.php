@@ -6,6 +6,10 @@ use App\Models\Lesson;
 use App\Models\User;
 use App\Models\Tag;
 use App\Http\Controllers\API\LessonController;
+use App\Http\Controllers\API\RelationshipController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\TagController;
+use Illuminate\Support\Facades\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,75 +29,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => '/v1'], function() {
 
     Route::apiResource('lessons', LessonController::class);
+    
+    // Route::redirect('lesson', 'lessons');
+    
+    Route::apiResource('users', UserController::class);
+    
+    Route::apiResource('tags', TagController::class);
 
-    Route::redirect('lesson', 'lessons');
+    Route::any('lesson', function() {
+        $message = "Please make sure to update your code to use the newer version of our API.
+        You should use lessons instead of lesson";
 
-    Route::get('users', function () {
-        return User::all();
+        return Response::json([
+            'data' => $message,
+            'link' => url('documentation/api'),
+        ], 404);
     });
 
-    Route::get('users/{id}', function($id) {
-    return User::find($id);
-    });
-
-    Route::post('users', function(Request $request) {
-        return User::create($request->all());
-    });
-
-    Route::match(['put', 'patch'], 'users/{id}', function(Request $request, $id) {
-        $user = User::findOrFail($id);
-        $user->update($request->all());
-        return $user;
-    });
-
-    Route::delete('lessons/{id}', function($id) {
-        User::find($id)->delete();
-
-        return 204;
-    });
-
-    Route::get('tags', function () {
-        return Tag::all();
-    });
-
-    Route::get('tags/{id}', function($id) {
-    return Tag::find($id);
-    });
-
-    Route::post('tags', function(Request $request) {
-        return Tag::create($request->all());
-    });
-
-    Route::match(['put', 'patch'], 'tags/{id}', function(Request $request, $id) {
-        $tag = Tag::findOrFail($id);
-        $tag->update($request->all());
-        return $tag;
-    });
-
-    Route::delete('lessons/{id}', function($id) {
-        Tag::find($id)->delete();
-
-        return 204;
-    });
-
-    Route::get('users/{id}/lessons', function($id) {
-        $user = User::find($id)->lessons;
-
-        return $user;
-    });
-
-    Route::get('lessons/{id}/tags', function ($id) {
-        $lesson = Lesson::find($id)->tags;
-
-        return $lesson;
-    });
-
-    Route::get('tags/{id}/lessons', function ($id) {
-        $tag = Tag::find($id)->lessons;
-
-        return $tag;
-    });
+    Route::get('users/{id}/lessons', [RelationshipController::class , 'userlessons']);
+    Route::get('tags/{id}/lessons', [RelationshipController::class , 'taglessons']);
+    Route::get('lessons/{id}/tags', [RelationshipController::class , 'lessontags']);
 
 });
-
-
