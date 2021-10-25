@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::find($id);
+        return User::findOrFail($id);
     }
 
     /**
@@ -62,7 +62,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        User::find($id)->delete();
+        User::findOrFail($id)->delete();
 
         return 204;
     }

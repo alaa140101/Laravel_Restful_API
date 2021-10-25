@@ -37,7 +37,7 @@ class LessonController extends Controller
      */
     public function show($id)
     {
-        return Lesson::find($id);
+        return Lesson::findOrFail($id);
     }
 
     /**
@@ -62,7 +62,7 @@ class LessonController extends Controller
      */
     public function destroy($id)
     {
-        Lesson::find($id)->delete();
+        Lesson::findOrFail($id)->delete();
 
         return 204;
     }

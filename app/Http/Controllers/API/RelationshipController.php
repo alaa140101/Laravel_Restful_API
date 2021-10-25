@@ -7,21 +7,30 @@ use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\User;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Response;
+
 
 class RelationshipController extends Controller
 {
    public function userLessons($id){
-      $user = User::find($id)->lessons;
-      return $user;
+      $user = User::findOrFail($id)->lessons;
+
+      return Response::json([
+         'data' => $user->toArray()
+      ], 200);
    }
    public function lessonTags($id){
-    $lesson = Lesson::find($id)->tags;
+    $lesson = Lesson::findOrFail($id)->tags;
 
-    return $lesson;
+     return Response::json([
+         'data' => $lesson->toArray()
+      ], 200);
    }
    public function tagLessons($id){
-    $tag = Tag::find($id)->lessons;
+    $tag = Tag::findOrFail($id)->lessons;
 
-    return $tag;
+    return Response::json([
+      'data' => $tag->toArray()
+   ], 200);
    }
 }
