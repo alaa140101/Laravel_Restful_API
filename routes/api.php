@@ -50,4 +50,6 @@ Route::group(['prefix' => '/v1'], function() {
     Route::get('tags/{id}/lessons', [RelationshipController::class , 'taglessons']);
     Route::get('lessons/{id}/tags', [RelationshipController::class , 'lessontags']);
 
+    Route::get('/login', 'API\LoginController@login');
+
 });
