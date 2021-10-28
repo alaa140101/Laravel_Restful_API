@@ -2,13 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\Lesson;
-use App\Models\User;
-use App\Models\Tag;
 use App\Http\Controllers\API\LessonController;
 use App\Http\Controllers\API\RelationshipController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TagController;
+use App\Http\Controllers\API\LoginController;
 use Illuminate\Support\Facades\Response;
 
 /*
@@ -50,6 +48,6 @@ Route::group(['prefix' => '/v1'], function() {
     Route::get('tags/{id}/lessons', [RelationshipController::class , 'taglessons']);
     Route::get('lessons/{id}/tags', [RelationshipController::class , 'lessontags']);
 
-    Route::get('/login', 'API\LoginController@login');
+    Route::get('/login', [LoginController::class, 'login']);
 
 });
