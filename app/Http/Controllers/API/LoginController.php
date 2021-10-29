@@ -20,11 +20,9 @@ class LoginController extends Controller
 
     public function login()
     {
-        // $tokenObj = Auth::user()->createToken('Access Token');
         $Accesstoken = Auth::user()->createToken('Access Token')->accessToken;
-        // $Accesstoken = $tokenObj->accessToken;
 
-        return Response(['User' => new UserResource(Auth::user()), 'Access Token' => $Accesstoken->token]);
+        return Response(['User' => new UserResource(Auth::user()), 'Access Token' => $Accesstoken]);
     }
 
 
