@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\LessonController;
 use App\Http\Controllers\API\RelationshipController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TagController;
 use App\Http\Controllers\API\LoginController;
+use Illuminate\Support\Facades\Response;
 
 /*
 |--------------------------------------------------------------------------
