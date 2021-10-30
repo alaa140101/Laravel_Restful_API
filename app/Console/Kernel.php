@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // Remove expired access token
+        $schedule->command('php artisan passport:purge')->hourly();
     }
 
     /**
