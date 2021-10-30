@@ -24,9 +24,10 @@ class LessonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lesson = LessonResource::collection(Lesson::all());
+        $limit = $request->input('limit') <= 50 ? $request->input('limit') : 15;
+        $lesson = LessonResource::collection(Lesson::paginate($limit));
         return $lesson->response()->setStatusCode(200);
     }
 
@@ -64,7 +65,9 @@ class LessonController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $lesson = new LessonResource(Lesson::findOrFail($id));
+        $idlesson = Lesson::findOrFail($id);
+        $this->authorize('update', $idlesson);
+        $lesson = new LessonResource($idlesson);
         $lesson->update($request->all());
         return $lesson->response()->setStatusCode(200, "Lesson Returned Succefully");
     }
@@ -77,7 +80,9 @@ class LessonController extends Controller
      */
     public function destroy($id)
     {
-        Lesson::findOrFail($id)->delete();
+        $idlesson = Lesson::findOrFail($id);
+        $this->authorize('delete', $idlesson);
+        $idlesson->delete();
 
         return 204;
     }

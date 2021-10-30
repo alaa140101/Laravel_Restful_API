@@ -23,9 +23,10 @@ class TagController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tag = TagResource::collection(Tag::all());
+        $limit = $request->input('limit') <= 50 ? $request->input('limit') : 15;
+        $tag = TagResource::collection(Tag::paginate($limit));
         return $tag->response()->setStatusCode(200);
     }
 
@@ -37,6 +38,7 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Tag::class);
         $tag = new TagResource(Tag::create($request->all()));
         return $tag->response()->setStatusCode(200);
     }
@@ -63,7 +65,9 @@ class TagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $tag = new TagResource(Tag::findOrFail($id));
+        $idtag = Tag::findOrFail($id);
+        $this->authorize('update', $idtag);
+        $tag = new TagResource($idtag);
         $tag->update($request->all());
         return $tag->response()->setStatusCode(200, "Tag Returned Succefully");
     }
@@ -76,7 +80,9 @@ class TagController extends Controller
      */
     public function destroy($id)
     {
-        Tag::findOrFail($id)->delete();
+        $idtag = Tag::findOrFail($id);
+        $this->authorize('delete', $idtag);
+        $idtag->delete();
 
         return 204;
     }

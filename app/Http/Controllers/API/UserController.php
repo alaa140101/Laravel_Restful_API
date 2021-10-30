@@ -25,9 +25,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = UserResource::collection(User::all());
+        $limit = $request->input('limit') <= 50 ? $request->input('limit') : 15;
+        $user = UserResource::collection(User::paginate($limit));
         return $user->response()->setStatusCode(200);
     }
 
@@ -39,6 +40,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', User::class);
         $user = new UserResource(User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -69,7 +71,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = new UserResource(User::findOrFail($id));
+        $iduser = User::findOrFail($id);
+        $this->authorize('update', $iduser);
+        $user = new UserResource($iduser);
         $user->update($request->all());
         return $user->response()->setStatusCode(200, "User Returned Succefully");
     }
@@ -82,6 +86,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $user = User::findOrFail($id);
+        $this->authorize('delete', $user);
         User::findOrFail($id)->delete();
 
         return 204;
